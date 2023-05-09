@@ -14,7 +14,7 @@ public class MyController {
 	@Autowired
 	private UserRepository userRepo;
 
-	@RequestMapping("/home")
+	@RequestMapping("/")
 	public String working(Model model) {
 //		User u=new User();
 		/*
@@ -25,6 +25,11 @@ public class MyController {
 		// User u= new User()
 		return "home";
 
+	}
+	
+	@RequestMapping("/signup")
+	public String signUpForm() {
+		return "signup";
 	}
 
 }
