@@ -1,5 +1,12 @@
 package com.spring.genie.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.constraints.*;
+
+//import org.springframework.validation.annotation.NotEmpty;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,8 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.*;
-
+import jakarta.validation.constraints.NotBlank;
 @Entity
 @Table(name = "myuser")
 public class User {
@@ -18,7 +24,11 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-
+	
+	//@NotBlank()
+	@NotNull
+    @NotBlank
+    @Size(min=2,max=12,message="limitation must be followed")
 	private String name;
 	@Column(unique = true)
 	private String email;
@@ -27,7 +37,8 @@ public class User {
 	private boolean enabled;
 	private String imageUrl;
 	@Column(length = 500)
-	private String about;
+    @Size(min=10,max=120,message="limitation must be followed")
+    private String about;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<ContactDetail> contact = new ArrayList<>();

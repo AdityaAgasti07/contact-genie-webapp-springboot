@@ -1,9 +1,14 @@
 package com.spring.genie.controller;
 
 import com.spring.genie.entities.*;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +22,7 @@ import com.spring.genie.service.*;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@Validated
 public class MyController {
 	@Autowired
 	private MyService s;
@@ -47,13 +53,21 @@ public class MyController {
 	}
 
 	@RequestMapping(value = "/do_register", method = RequestMethod.POST)
-	public String registerHandler(@ModelAttribute User u, Model m,
+	public String registerHandler(@Valid @ModelAttribute("u") User u,BindingResult br, Model m,
 			@RequestParam(value = "agreement", defaultValue = "false") boolean b, HttpSession session) {
 
 		try {
 			if (!b) {
 				System.out.println("box not checked");
 				throw new Exception("Box not checked error");
+			}
+			if(br.hasErrors()) {
+				System.out.println("result--- "+br.toString() );
+				m.addAttribute("user",u);
+				return "signup";
+				
+				
+				
 			}
 
 			u.setRole("ROLE_USER");
