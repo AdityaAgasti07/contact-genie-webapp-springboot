@@ -10,7 +10,7 @@
 	<link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
-<body>
+<body class="banner">
 	<!-- Start of NavBar
  -->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-sky">
@@ -27,7 +27,7 @@
 					</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/about}">About</a></li>
 				
-				<li class="nav-item"><a class="nav-link " href="#">Login</a>
+				<li class="nav-item"><a class="nav-link " th:href="@{/user/index}">Login</a>
 				</li>
 				<li class="nav-item"><a class="nav-link " th:href="@{/signup}">Sign Up</a>
 				</li>

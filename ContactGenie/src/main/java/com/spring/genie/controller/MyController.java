@@ -5,6 +5,8 @@ import com.spring.genie.entities.*;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,12 +22,15 @@ import com.spring.genie.entities.User;
 import com.spring.genie.service.*;
 
 import jakarta.servlet.http.HttpSession;
-
+import com.spring.genie.config.*;
 @Controller
 @Validated
 public class MyController {
 	@Autowired
 	private MyService s;
+	
+	@Autowired
+	private BCryptPasswordEncoder getEncoder;
 
 	@RequestMapping("/")
 	public String working(Model model) {
@@ -34,6 +39,11 @@ public class MyController {
 
 		return "home";
 
+	}
+
+	private PasswordEncoder BCryptPasswordEncoder() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@RequestMapping("/about")
@@ -69,10 +79,12 @@ public class MyController {
 				
 				
 			}
+			
 
 			u.setRole("ROLE_USER");
 			u.setEnabled(true);
 			u.setImageUrl("default.png");
+			u.setPassword(getEncoder.encode(u.getPassword()));
 			System.out.println("agreement " + b);
 			System.out.println(u);
 			m.addAttribute("user", u);
@@ -92,6 +104,12 @@ public class MyController {
 			return "signup";
 		}
 
+	}
+	
+	@RequestMapping("/signin")
+	public String signinPage(Model m) {
+		m.addAttribute("title","SignIn page");
+		return "signin";
 	}
 
 }
