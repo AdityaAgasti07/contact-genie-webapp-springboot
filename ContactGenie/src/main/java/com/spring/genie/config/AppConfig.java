@@ -13,47 +13,41 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class AppConfig{
-	
-	
+public class AppConfig {
+
 	@Bean
-	public BCryptPasswordEncoder getEncoder()
-	{
+	public BCryptPasswordEncoder getEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Bean
-	public UserDetailsService getDetails()
-	{
+	public UserDetailsService getDetails() {
 		return new UserDetailsServiceImpl();
 	}
-	
+
 	@Bean
-	public DaoAuthenticationProvider getProvider()
-	{
-		DaoAuthenticationProvider provider=new DaoAuthenticationProvider();
+	public DaoAuthenticationProvider getProvider() {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 		provider.setUserDetailsService(getDetails());
 		provider.setPasswordEncoder(getEncoder());
 		return provider;
 	}
-	
+
 	@Bean
-	public AuthenticationManager authenticationManager
-	(AuthenticationConfiguration config) throws Exception
-	{
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Bean
-	public SecurityFilterChain getFilter(HttpSecurity http) throws Exception
-	{
-		http.authorizeRequests().requestMatchers("/admin/**")
-		.hasRole("ADMIN").requestMatchers("/user/**").hasRole("USER")
-		.requestMatchers("/**").permitAll().and().formLogin().loginPage("/signin").and().csrf().disable();
-	http.formLogin().defaultSuccessUrl("/user/index",true);
-	return http.build();
-	}
-	
-}
+	public SecurityFilterChain getFilter(HttpSecurity http) throws Exception {
+		http.authorizeRequests().requestMatchers("/admin/**").hasRole("ADMIN").requestMatchers("/user/**")
+				.hasRole("USER").requestMatchers("/**").permitAll().and().formLogin().loginPage("/signin")
+				.loginProcessingUrl("/handleLogin").defaultSuccessUrl("/user/index")
 
+				.and().csrf().disable();
+		http.formLogin().defaultSuccessUrl("/user/index", true);
+		return http.build();
+	}
+
+}

@@ -2,6 +2,7 @@ package com.spring.genie.config;
 
 import java.util.Collection;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,8 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.spring.genie.entities.User;
 
-public class UserDetailImpl implements UserDetails{
-	
+public class UserDetailImpl implements UserDetails {
+
 	@Autowired
 	private User user;
 
@@ -21,8 +22,8 @@ public class UserDetailImpl implements UserDetails{
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-	
-		SimpleGrantedAuthority sga=new SimpleGrantedAuthority(user.getRole());
+
+		SimpleGrantedAuthority sga = new SimpleGrantedAuthority(user.getRole());
 		return List.of(sga);
 	}
 
@@ -41,7 +42,7 @@ public class UserDetailImpl implements UserDetails{
 
 	@Override
 	public String getUsername() {
-		return user.getName();
+		return user.getEmail();
 	}
 
 	@Override
@@ -63,7 +64,5 @@ public class UserDetailImpl implements UserDetails{
 	public boolean isEnabled() {
 		return true;
 	}
-	
-	
 
 }

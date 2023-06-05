@@ -3,7 +3,8 @@ package com.spring.genie.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 //import org.springframework.validation.annotation.NotEmpty;
 
@@ -17,18 +18,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+
 @Entity
-@Table(name = "myuser")
+@Table(name = "CG_User")
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	
-	//@NotBlank()
+
+	// @NotBlank()
 	@NotNull
-    @NotBlank
-    @Size(min=2,max=12,message="limitation must be followed")
+	@NotBlank
+	@Size(min = 2, max = 12, message = "limitation must be followed")
 	private String name;
 	@Column(unique = true)
 	private String email;
@@ -37,10 +39,19 @@ public class User {
 	private boolean enabled;
 	private String imageUrl;
 	@Column(length = 500)
-    @Size(min=10,max=120,message="limitation must be followed")
-    private String about;
+	@Size(min = 10, max = 120, message = "limitation must be followed")
+	private String about;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	public List<ContactDetail> getContact() {
+		return contact;
+	}
+
+	public void setContact(List<ContactDetail> contact) {
+		this.contact = contact;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+
 	private List<ContactDetail> contact = new ArrayList<>();
 
 	public User(String name, String email, String password, String role, boolean enabled, String imageUrl,

@@ -1,10 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="normal/base::Layout(~{::section})">
+
 <head>
 	<meta charset="UTF-8" />
-	<title>User Dashboard</title>
+	<title th:text="${title}">Document</title>
 </head>
+
 <body>
-	<h1>Iam User Dashboard page</h1>
+	<section class="banner d-flex justify-content-center align-items-center">
+		<h1>Iam dashboard page</h1>
+	</section>
 </body>
+
 </html>
