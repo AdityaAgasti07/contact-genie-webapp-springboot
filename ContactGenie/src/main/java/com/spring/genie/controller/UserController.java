@@ -21,7 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.genie.Dao.UserRepository;
 import com.spring.genie.entities.ContactDetail;
+import com.spring.genie.entities.Message;
 import com.spring.genie.entities.User;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/user")
@@ -59,7 +62,8 @@ public class UserController {
 
 	@PostMapping("/handleContact")
 	public String handleContactDetails(@ModelAttribute ContactDetail c, Principal p,
-			@RequestParam("profileImage") MultipartFile profileImage) throws IOException {
+			@RequestParam("profileImage") MultipartFile profileImage,HttpSession session) throws IOException {
+		try {
 		String username = p.getName();
 		User u = uRepo.getUserByUserName(username);
 		c.setUser(u);
@@ -82,6 +86,13 @@ public class UserController {
 		this.uRepo.save(u);
 		System.out.println("Contact Data" + c);
 		System.out.println("data saved to database");
+		session.setAttribute("message", new Message("Contact Added Successfully !! Add More...","success"));
+		} 
+		catch(Exception e) {
+			e.printStackTrace();
+			session.setAttribute("message",new Message("Something Went Wrong !!","danger"));
+			
+		}
 
 		return "normal/add_contact_form";
 

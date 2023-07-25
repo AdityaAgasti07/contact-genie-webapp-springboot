@@ -13,9 +13,12 @@
 
 
 			<div class="card-body">
+			<div th:if="${session.message}" class="container">
 			
-			<div class="alert alert-success" role="alert">
-			This is a success alert—check it out!
+			<div th:classappend="${'alert-'+session.message.type}" class="alert text-center" role="alert">
+			<span th:text="${session.message.content}"></span>
+		</div>
+		<!-- <th:block th:text="${#session.removeAttribute()}"></th:block> -->
 		</div>
 				<div class="container text-center">
 					<img style="width: 50px" class="" th:src="@{../img/add-user.png}">
