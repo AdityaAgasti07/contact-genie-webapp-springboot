@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.genie.Dao.ContactsRepository;
 import com.spring.genie.Dao.UserRepository;
 import com.spring.genie.entities.ContactDetail;
 import com.spring.genie.entities.Message;
@@ -33,6 +35,9 @@ public class UserController {
 
 	@Autowired
 	private UserRepository uRepo;
+
+	@Autowired
+	private ContactsRepository cRepo;
 
 	@ModelAttribute
 	public void handleCommonRequest(Model m, Principal p) {
@@ -62,40 +67,53 @@ public class UserController {
 
 	@PostMapping("/handleContact")
 	public String handleContactDetails(@ModelAttribute ContactDetail c, Principal p,
-			@RequestParam("profileImage") MultipartFile profileImage,HttpSession session) throws IOException {
+			@RequestParam("profileImage") MultipartFile profileImage, HttpSession session) throws IOException {
 		try {
-		String username = p.getName();
-		User u = uRepo.getUserByUserName(username);
-		c.setUser(u);
-		u.getContact().add(c);
+			String username = p.getName();
+			User u = uRepo.getUserByUserName(username);
+			c.setUser(u);
+			u.getContact().add(c);
 
-		if (profileImage == null) {
+			if (profileImage == null) {
 
-			System.out.println("Profile Image is Empty !!");
+				System.out.println("Profile Image is Empty !!");
 
-		} else {
+			} else {
 
-			c.setImage(profileImage.getOriginalFilename());
-			File saveProfile = new ClassPathResource("static/img/").getFile();
+				c.setImage(profileImage.getOriginalFilename());
+				File saveProfile = new ClassPathResource("static/img/").getFile();
 
-			Path path = Paths.get(saveProfile.getAbsolutePath() + File.separator + profileImage.getOriginalFilename());
+				Path path = Paths
+						.get(saveProfile.getAbsolutePath() + File.separator + profileImage.getOriginalFilename());
 
-			Files.copy(profileImage.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-			System.out.println("Image Uploaded Successfully");
-		}
-		this.uRepo.save(u);
-		System.out.println("Contact Data" + c);
-		System.out.println("data saved to database");
-		session.setAttribute("message", new Message("Contact Added Successfully !! Add More...","success"));
-		} 
-		catch(Exception e) {
+				Files.copy(profileImage.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				System.out.println("Image Uploaded Successfully");
+			}
+			this.uRepo.save(u);
+			System.out.println("Contact Data" + c);
+			System.out.println("data saved to database");
+			session.setAttribute("message", new Message("Contact Added Successfully !! Add More...", "success"));
+		} catch (Exception e) {
 			e.printStackTrace();
-			session.setAttribute("message",new Message("Something Went Wrong !!","danger"));
-			
+			session.setAttribute("message", new Message("Something Went Wrong !!", "danger"));
+
 		}
 
 		return "normal/add_contact_form";
 
+	}
+
+	@GetMapping("/showContacts")
+	public String showContacts(Model m, Principal p) {
+		System.out.println("show contact controller executed");
+		String userName = p.getName();
+		User u = uRepo.getUserByUserName(userName);
+		List<ContactDetail> contacts = cRepo.findContactsByUser(u.getId());
+
+		m.addAttribute("contacts", contacts);
+		m.addAttribute("title", "Show-Contacts-Page");
+
+		return "normal/show_contacts";
 	}
 
 }
