@@ -14,8 +14,7 @@
 	<name>ContactGenie</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<maven.compiler.target>11</maven.compiler.target>
-                <maven.compiler.source>11</maven.compiler.source>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
